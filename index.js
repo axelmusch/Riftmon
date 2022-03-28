@@ -3,35 +3,61 @@ const canvas = document.querySelector("canvas")
 const ctx = canvas.getContext('2d')
 
 
+
+
 canvas.height = 576 * 2 //window.innerHeight
 //canvas.height = window.innerHeight
 
 canvas.width = 1024 * 2 //window.innerWidth
 //canvas.width = window.innerHeight * 1.778
 
-const collisionMap = []
-for (let i = 0; i < collisions.length; i += 50) {
-    collisionMap.push(collisions.slice(i, i + 50))
-}
-
 const offset = {
     x: -500,
     y: -1900
 }
 
+const collisionMap = []
 const boundarys = []
-collisionMap.forEach((row, i) => {
-    row.forEach((symbol, j) => {
-        if (symbol != 0) {
-            boundarys.push(new Boundary({
-                position: {
-                    x: j * Boundary.width + offset.x,
-                    y: i * Boundary.height + offset.y
+
+
+
+fetch('riftmon..tmj')
+    .then(response => response.json())
+    .then(data => {
+        data.layers.forEach(layer => {
+            console.log("🚀 ~ file: index.js ~ line 49 ~ layer", layer)
+
+            if (layer.name === "Collisions") {
+
+                for (let i = 0; i < layer.data.length; i += 50) {
+                    collisionMap.push(layer.data.slice(i, i + 50))
                 }
-            }))
-        }
-    })
-})
+
+                collisionMap.forEach((row, i) => {
+                    row.forEach((symbol, j) => {
+                        if (symbol != 0) {
+                            boundarys.push(new Boundary({
+                                position: {
+                                    x: j * Boundary.width + offset.x,
+                                    y: i * Boundary.height + offset.y
+                                }
+                            }))
+                        }
+                    })
+                })
+                movables = [...movables, ...boundarys]
+
+            } else if (layer.name === "Battlepatches") {
+
+            }
+        })
+    });
+
+
+
+
+
+
 
 const img = new Image()
 img.src = "./images/riftmon.png"
@@ -97,7 +123,7 @@ const keys = {
     }
 }
 
-const movables = [background, ...boundarys, foreground]
+let movables = [background, foreground]
 
 function rectangularCollision({ rectangle1, rectangle2 }) {
     return (rectangle1.position.x + rectangle1.width >= rectangle2.position.x &&
