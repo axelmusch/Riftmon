@@ -13,7 +13,7 @@
  <tileset firstgid="2393" name="collision" tilewidth="32" tileheight="32" tilecount="1" columns="1">
   <image source="collision.png" width="32" height="32"/>
  </tileset>
- <group id="15" name="base">
+ <group id="15" name="base" visible="0">
   <layer id="1" name="grass" width="50" height="50">
    <data encoding="csv">
 1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,
@@ -177,7 +177,7 @@
 </data>
   </layer>
  </group>
- <group id="14" name="main floor">
+ <group id="14" name="main floor" visible="0">
   <layer id="7" name="houses" width="50" height="50">
    <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -341,7 +341,7 @@
 </data>
   </layer>
  </group>
- <group id="16" name="elev 1">
+ <group id="16" name="elev 1" visible="0">
   <layer id="17" name="Tilelaag 12" width="50" height="50">
    <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -505,7 +505,7 @@
 </data>
   </layer>
  </group>
- <group id="13" name="trees">
+ <group id="13" name="trees" visible="0">
   <layer id="5" name="trees edges2" width="50" height="50">
    <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -669,7 +669,7 @@
 </data>
   </layer>
  </group>
- <layer id="18" name="Battlepatches" width="50" height="50">
+ <layer id="18" name="Battlepatches" width="50" height="50" visible="0">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -723,7 +723,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <layer id="21" name="Collisions" width="50" height="50" opacity="0.41">
+ <layer id="21" name="Collisions" width="50" height="50" visible="0" opacity="0.41">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
