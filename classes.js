@@ -10,6 +10,7 @@ class Sprite {
         }
         this.moving = false
         this.sprites = sprites
+        this.speed = 1
     }
 
     draw() {
@@ -29,7 +30,7 @@ class Sprite {
         if (this.frames.max > 1) {
             this.frames.elapsed++
         }
-        if (this.frames.elapsed % 10 === 0) {
+        if (this.frames.elapsed % (10 * this.speed) === 0) {
             if (this.frames.val < this.frames.max - 1) this.frames.val++
             else this.frames.val = 0
         }
@@ -47,7 +48,7 @@ class Boundary {
     }
 
     draw() {
-        ctx.fillStyle = 'rgba(255,0,0,0.2)'
+        ctx.fillStyle = 'rgba(255,0,0,0.1s)'
         ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
     }
 }

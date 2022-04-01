@@ -19,13 +19,13 @@ const offset = {
 const collisionMap = []
 const boundarys = []
 
+const battleMap = []
+const battleZones = []
 
-
-fetch('riftmon..tmj')
+fetch('./riftmon..tmj')
     .then(response => response.json())
     .then(data => {
         data.layers.forEach(layer => {
-            console.log("🚀 ~ file: index.js ~ line 49 ~ layer", layer)
 
             if (layer.name === "Collisions") {
 
@@ -47,7 +47,24 @@ fetch('riftmon..tmj')
                 })
                 movables = [...movables, ...boundarys]
 
-            } else if (layer.name === "Battlepatches") {
+            } else if (layer.name === "battleZones") {
+                for (let i = 0; i < layer.data.length; i += 50) {
+                    battleMap.push(layer.data.slice(i, i + 50))
+                }
+
+                battleMap.forEach((row, i) => {
+                    row.forEach((symbol, j) => {
+                        if (symbol != 0) {
+                            battleZones.push(new Boundary({
+                                position: {
+                                    x: j * Boundary.width + offset.x,
+                                    y: i * Boundary.height + offset.y
+                                }
+                            }))
+                        }
+                    })
+                })
+                movables = [...movables, ...battleZones]
 
             }
         })
@@ -131,32 +148,58 @@ function rectangularCollision({ rectangle1, rectangle2 }) {
         rectangle1.position.y <= rectangle2.position.y + rectangle2.height &&
         rectangle1.position.y + rectangle1.height >= rectangle2.position.y)
 }
+let speed = 6
+
+const getFPS = () =>
+    new Promise(resolve =>
+        requestAnimationFrame(t1 =>
+            requestAnimationFrame(t2 => resolve(1000 / (t2 - t1)))
+        )
+    )
+
+// Calling the function to get the FPS
+getFPS().then(fps => {
+    speed = (6 / (fps / 60))
+    console.log("🚀 ~ file: index.js ~ line 148 ~ speed", speed)
+    player.speed = Math.round(fps / 60)
+});
 
 function animate() {
-    setTimeout(function () {
-        window.requestAnimationFrame(animate)
-
-    }, 1000 / 60);
+    /*    setTimeout(function () {}, 1000 / 60); */
+    window.requestAnimationFrame(animate)
     background.draw()
 
     boundarys.forEach(boundary => {
         boundary.draw()
-        if (rectangularCollision({ rectangle1: player, rectangle2: boundary })) {
-            console.log('colliding')
-        }
     })
+
+    battleZones.forEach(battleZone => {
+        battleZone.draw()
+    })
+
+
     player.draw()
     foreground.draw()
 
     let moving = true
     player.moving = false
 
-    let speed = 6
 
-    keys.ctrl.pressed ? speed = 9 : speed = 6
+    //keys.ctrl.pressed ? speed = 9 : speed = 6
 
-
-
+    if (keys.w.pressed || keys.a.pressed || keys.s.pressed || keys.d.pressed) {
+        for (let i = 0; i < battleZones.length; i++) {
+            const battleZone = battleZones[i]
+            if (rectangularCollision(
+                {
+                    rectangle1: player,
+                    rectangle2: battleZone
+                })) {
+                console.log('battle')
+                break
+            }
+        }
+    }
     if (keys.w.pressed && lastkey === 'w') {
         player.moving = true
         player.image = player.sprites.up
@@ -178,6 +221,7 @@ function animate() {
                 break
             }
         }
+
 
         if (moving)
             movables.forEach(moveable => {
