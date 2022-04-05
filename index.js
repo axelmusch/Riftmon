@@ -1,8 +1,5 @@
-
 const canvas = document.querySelector("canvas")
 const ctx = canvas.getContext('2d')
-
-
 
 
 canvas.height = 576 * 2 //window.innerHeight
@@ -72,16 +69,11 @@ fetch('./riftmon..tmj')
 
 
 
-
-
-
-
 const img = new Image()
 img.src = "./images/riftmon.png"
 
 const foregroundImg = new Image()
 foregroundImg.src = "./images/foreground.png"
-
 
 const playerImgDown = new Image()
 playerImgDown.src = "./images/playerDown.png"
@@ -104,7 +96,8 @@ const player = new Sprite({
     },
     image: playerImgDown,
     frames: {
-        max: 4
+        max: 4,
+        hold: 10
     },
     sprites: {
         up: playerImgUp,
@@ -158,10 +151,13 @@ const getFPS = () =>
     )
 
 // Calling the function to get the FPS
+let FPSx = 60
+
 getFPS().then(fps => {
     speed = (6 / (fps / 60))
     console.log("🚀 ~ file: index.js ~ line 148 ~ speed", speed)
     player.speed = Math.round(fps / 60)
+    FPSx = Math.round(fps / 60)
 });
 const battle = {
     initiated: false
@@ -186,7 +182,7 @@ function animate() {
     foreground.draw()
 
     let moving = true
-    player.moving = false
+    player.animate = false
     if (battle.initiated) return
     //battel sequence
     if (keys.w.pressed || keys.a.pressed || keys.s.pressed || keys.d.pressed) {
@@ -233,19 +229,15 @@ function animate() {
                                 })
                             }
                         })
-
-
-                        //next animate loop
                     }
                 })
-
                 break
             }
         }
     }
 
     if (keys.w.pressed && lastkey === 'w') {
-        player.moving = true
+        player.animate = true
         player.image = player.sprites.up
         for (let i = 0; i < boundarys.length; i++) {
             const boundary = boundarys[i]
@@ -273,7 +265,7 @@ function animate() {
     }
 
     else if (keys.a.pressed && lastkey === 'a') {
-        player.moving = true
+        player.animate = true
         player.image = player.sprites.left
         for (let i = 0; i < boundarys.length; i++) {
             const boundary = boundarys[i]
@@ -301,7 +293,7 @@ function animate() {
     }
 
     else if (keys.s.pressed && lastkey === 's') {
-        player.moving = true
+        player.animate = true
         player.image = player.sprites.down
         for (let i = 0; i < boundarys.length; i++) {
             const boundary = boundarys[i]
@@ -329,7 +321,7 @@ function animate() {
     }
 
     else if (keys.d.pressed && lastkey === 'd') {
-        player.moving = true
+        player.animate = true
         player.image = player.sprites.right
         for (let i = 0; i < boundarys.length; i++) {
             const boundary = boundarys[i]
@@ -355,10 +347,7 @@ function animate() {
                 moveable.position.x -= speed
             })
     }
-
-
 }
-//animate()
 
 const battleBackgroundImage = new Image()
 battleBackgroundImage.src = './images/battleBackground.png'
@@ -368,12 +357,41 @@ const battleBackground = new Sprite({
 })
 
 
+const draggleImage = new Image()
+draggleImage.src = './images/draggleSprite.png'
+const draggle = new Sprite({
+    position: {
+        x: 1600,
+        y: 200
+    },
+    image: draggleImage,
+    frames: { max: 4, hold: 20 },
+    animate: true
+})
+draggle.speed = 2
+
+const embyImage = new Image()
+embyImage.src = './images/embySprite.png'
+const emby = new Sprite({
+    position: {
+        x: 580,
+        y: 650
+    },
+    image: embyImage,
+    frames: { max: 4, hold: 20 },
+    animate: true
+})
+emby.speed = 2
+
+
 function animateBattle() {
     window.requestAnimationFrame(animateBattle)
     battleBackground.draw()
+    draggle.draw()
+    emby.draw()
 }
-
-animateBattle()
+animate()
+//animateBattle()
 
 let lastkey = ''
 window.addEventListener('keydown', (e) => {
@@ -425,4 +443,3 @@ window.addEventListener('keyup', (e) => {
     canvas.height = window.innerHeight
     canvas.width = window.innerWidth
 }, true); */
-
