@@ -163,10 +163,14 @@ getFPS().then(fps => {
     console.log("🚀 ~ file: index.js ~ line 148 ~ speed", speed)
     player.speed = Math.round(fps / 60)
 });
+const battle = {
+    initiated: false
+}
+
 
 function animate() {
     /*    setTimeout(function () {}, 1000 / 60); */
-    window.requestAnimationFrame(animate)
+    const animnationId = window.requestAnimationFrame(animate)
     background.draw()
 
     boundarys.forEach(boundary => {
@@ -183,23 +187,63 @@ function animate() {
 
     let moving = true
     player.moving = false
-
-
-    //keys.ctrl.pressed ? speed = 9 : speed = 6
-
+    if (battle.initiated) return
+    //battel sequence
     if (keys.w.pressed || keys.a.pressed || keys.s.pressed || keys.d.pressed) {
         for (let i = 0; i < battleZones.length; i++) {
             const battleZone = battleZones[i]
+            const overlappingArea =
+                (
+                    Math.min(player.position.x + player.width, battleZone.position.x + battleZone.width)
+                    - Math.max(player.position.x, battleZone.position.x)
+                )
+                *
+                (
+                    Math.min(player.position.y + player.height, battleZone.position.y + battleZone.height)
+                    - Math.max(player.position.y, battleZone.position.y)
+                )
+
             if (rectangularCollision(
                 {
                     rectangle1: player,
                     rectangle2: battleZone
-                })) {
-                console.log('battle')
+                })
+                && overlappingArea > (player.width * player.height) / 2
+                && Math.random() < 0.01
+            ) {
+                console.log('activate battle')
+                window.cancelAnimationFrame(animnationId)
+                battle.initiated = true
+
+                gsap.to('#overlappingDiv', {
+                    opacity: 1,
+                    repeat: 3,
+                    yoyo: true,
+                    duration: 0.4,
+                    onComplete() {
+                        gsap.to('#overlappingDiv', {
+                            opacity: 1,
+                            duration: 0.4,
+                            onComplete() {
+                                animateBattle()
+                                gsap.to('#overlappingDiv', {
+                                    opacity: 0,
+                                    duration: 0.4,
+
+                                })
+                            }
+                        })
+
+
+                        //next animate loop
+                    }
+                })
+
                 break
             }
         }
     }
+
     if (keys.w.pressed && lastkey === 'w') {
         player.moving = true
         player.image = player.sprites.up
@@ -221,7 +265,6 @@ function animate() {
                 break
             }
         }
-
 
         if (moving)
             movables.forEach(moveable => {
@@ -315,7 +358,23 @@ function animate() {
 
 
 }
-animate()
+//animate()
+
+const battleBackgroundImage = new Image()
+battleBackgroundImage.src = './images/battleBackground.png'
+const battleBackground = new Sprite({
+    position: { x: 0, y: 0 },
+    image: battleBackgroundImage
+})
+
+
+function animateBattle() {
+    window.requestAnimationFrame(animateBattle)
+    battleBackground.draw()
+}
+
+animateBattle()
+
 let lastkey = ''
 window.addEventListener('keydown', (e) => {
 
